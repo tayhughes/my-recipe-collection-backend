@@ -44,3 +44,14 @@ $ npm start
 # Alternatively you can run
 $ node index.js
 ```
+
+## Creating Tables for the Database
+```sql
+CREATE TABLE recipes (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(150),
+    main_ingredient TEXT,
+    main_instructions TEXT,
+    cuisine_type VARCHAR(150)
+);
+```
