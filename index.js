@@ -25,7 +25,7 @@ const port_interface = 3001;
 application.get('/recipe_id=:id', async(req,res) => {
     const recipe_req = [];
     const Recipe_To_Find = `
-        SELECT name,main_ingredient,cuisine_type FROM recipes 
+        SELECT name,main_ingredient,main_instructions, cuisine_type FROM recipes 
         WHERE id = ${req.params.id}`;
     const client = await pool.connect();
     const query_result = await client.query(Recipe_To_Find);
@@ -36,6 +36,7 @@ application.get('/recipe_id=:id', async(req,res) => {
                 id: query_result.rows[indx].id,
                 name: query_result.rows[indx].name,
                 main_ingredient: query_result.rows[indx].main_ingredient,
+                main_instructions: query_result.rows[indx].main_instructions,
                 cuisine: query_result.rows[indx].cuisine_type
             }
         );
@@ -88,6 +89,7 @@ application.get('/data',async (req,res) => {
                     id: query_result.rows[indx].id,
                     name: query_result.rows[indx].name,
                     main_ingredient: query_result.rows[indx].main_ingredient,
+                    main_instructions: query_result.rows[indx].main_instructions,
                     cuisine: query_result.rows[indx].cuisine_type
                 }
             );
@@ -127,11 +129,11 @@ application.post('/submit-data-form',async (request,response) => {
         const client = await pool.connect();
         const receivedFrom = request.body;
         const INSERT_QUERY = `
-            INSERT INTO recipes (name,main_ingredient,cuisine_type) 
-            VALUES ($1,$2,$3);
+            INSERT INTO recipes (name,main_ingredient,main_instructions, cuisine_type) 
+            VALUES ($1,$2,$3,$4);
         `;
         console.log(request.body);
-        const values = [`${receivedFrom.food_name}`, `${receivedFrom.main_ingr}`, `${receivedFrom.cuisine_type}`];
+        const values = [`${receivedFrom.food_name}`, `${receivedFrom.main_ingr}`, `${receivedFrom.main_instr}`,`${receivedFrom.cuisine_type}`];
         await client.query(INSERT_QUERY, values);
         client.release();
         //serial_value++;
